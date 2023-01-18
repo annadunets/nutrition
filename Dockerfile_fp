@@ -1,0 +1,15 @@
+FROM python:3.8.3-slim
+
+COPY receipts /usr/src/my_app/receipts
+
+WORKDIR /usr/src/my_app/file_processing
+
+RUN apt-get update \
+    && apt-get -y install libpq-dev gcc \
+    && pip install psycopg2 \
+    && pip install pika==1.3.1 \
+    && pip install pypdf
+
+COPY file_processing .
+
+CMD ["python", "./receive.py"]
