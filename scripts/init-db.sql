@@ -6,10 +6,31 @@
 
 \connect nutrition;
 
-CREATE TABLE public.files (
+CREATE TABLE public.receipts (
+    receipt_id SERIAL PRIMARY KEY,
+    receipt_name VARCHAR(45) NOT NULL,
+    date DATE NOT NULL DEFAULT CURRENT_DATE
+);
+
+CREATE TABLE public.products (
+    product_id SERIAL PRIMARY KEY,
+    product_name character varying(45) NOT NULL,
+    fat NUMERIC(3, 2),
+    carbohydrate NUMERIC(3, 2),
+    protein NUMERIC(3, 2)
+);
+
+CREATE TABLE public.receipts_content (
+    receipt_id INT REFERENCES receipts (receipt_id),
+    product_id INT REFERENCES products (product_id),
+    quantity INT,
+    unit_of_measurement VARCHAR
+);
+
+CREATE TABLE public.receipt_processing_logs (
     id SERIAL PRIMARY KEY,
-    filename character varying(45) NOT NULL,
-    date character varying(20)
+    receipt_id INT REFERENCES receipts (receipt_id),
+    message VARCHAR
 );
 
 --

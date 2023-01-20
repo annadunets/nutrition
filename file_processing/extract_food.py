@@ -24,6 +24,4 @@ def extract_from_pdf(filename):
                     name = re.findall(name_pattern, line)
                     our_goods[name[0]] = quantity[0]
 
-    for key, value in our_goods.items():
-        print(key)
-        print(value)
+    return our_goods
