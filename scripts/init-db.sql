@@ -23,7 +23,7 @@ CREATE TABLE public.products (
 CREATE TABLE public.receipts_content (
     receipt_id INT REFERENCES receipts (receipt_id),
     product_id INT REFERENCES products (product_id),
-    quantity INT,
+    quantity FLOAT,
     unit_of_measurement VARCHAR
 );
 

@@ -16,7 +16,10 @@ def extract_from_pdf(filename):
             for line in pageObj.extract_text().splitlines():
                 pattern = "[0-9]\.[0-9]{1,3}kg"
                 x = re.search(pattern, line)
-            
+
+                # unit test - if you are giving this string you are getting this result 
+                # (two examples - one there is product and another one there's not)
+                # move it to separate function
                 if x:
                     quantity_pattern = "[0-9]\.[0-9]{1,3}kg"
                     quantity = re.findall(quantity_pattern, line)
