@@ -1,11 +1,7 @@
 #!/usr/bin/env python
 import sys, os, pika, psycopg2
-from os.path import dirname, abspath
-
 from queue_listener import QueueListener
-import database, extract_food
-#from pathlib import Path
-
+import config, database, extract_food
 
 
 def main():
@@ -15,8 +11,8 @@ def main():
 
 def process_pdf(data):
     
-    database.insert_into_db(data['name'])
-    filename = str(dirname(dirname(abspath(__file__)))) + '/receipts/' + data['name']
+    database.insert_into_receipts(data['name'])
+    filename = config.MAINDIR + '/receipts/' + data['name']
     receipt_data = extract_food.extract_from_pdf(filename)
     # start loop and check if the produnct from the receipt are already in products table
     for key, value in receipt_data.items():
