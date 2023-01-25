@@ -1,4 +1,4 @@
-import psycopg2
+import psycopg2, re
 import config
 from datetime import date
 
@@ -18,8 +18,16 @@ def execute_insert_query(sql, values):
         
     cursor.execute(sql, values)
     conn.commit()
+
+    try:
+        cursor.execute('SELECT LASTVAL()')
+        id = cursor.fetchone()[0]
+    except psycopg2.errors.ObjectNotInPrerequisiteState:
+        id = None  
+
     cursor.close()
     conn.close()
+    return id
 
 
 def insert_into_receipts(receipt_name):
@@ -30,21 +38,28 @@ def insert_into_receipts(receipt_name):
     values = (receipt_name, today)
     
     # pass the query and the values tuple to the execute function
+    print("about to insert into receipts")
+    id = execute_insert_query(sql, values)
+    return id
+
+
+def insert_into_table_receipts_content(receipt_id, product_id, quantity, unit_of_measurement):
+
+    sql = "INSERT INTO receipts_content (receipt_id, product_id, quantity, unit_of_measurement) VALUES (%s, %s, %s, %s);"
+
+    values = (receipt_id, product_id, quantity, unit_of_measurement)
+
     execute_insert_query(sql, values)
 
 
-def insert_into_table_receipts_content(data):
-    
-    sql = "INSERT INTO receipts_content (product_name, date) VALUES (%s, %s);"
+def insert_into_products(product_name, fat, carbohydrate, protein):
 
-    today = date.today()
-    values = (data, today)
-        
-    execute_insert_query(sql, values)
+    sql = "INSERT INTO products (product_name, fat, carbohydrate, protein) VALUES (%s, %s, %s, %s);"
 
+    values = (product_name, fat, carbohydrate, protein)
 
-def insert_into_products(data):
-    pass
+    id = execute_insert_query(sql, values)
+    return id
 
 
 def select_from_products(data):
@@ -54,7 +69,6 @@ def select_from_products(data):
     
     sql = "SELECT product_id FROM products WHERE product_name = %s;"
     
-    print(data)
     cursor.execute(sql, [data.strip(),])
 
     result = cursor.fetchone()
