@@ -43,16 +43,11 @@ def insert_into_receipts(receipt_name):
     return id
 
 
-def insert_into_table_receipts_content(receipt_id, product_id, quantity_info):
+def insert_into_table_receipts_content(receipt_id, product_id, quantity, unit_of_measurement):
 
     sql = "INSERT INTO receipts_content (receipt_id, product_id, quantity, unit_of_measurement) VALUES (%s, %s, %s, %s);"
 
-    quantity_pattern = "[0-9]\.[0-9]{1,3}"
-    quantity = re.findall(quantity_pattern, quantity_info)
-    unit_of_measurement_pattern = "[a-z]{1,3}"
-    unit_of_measurement = re.findall(unit_of_measurement_pattern, quantity_info)
-
-    values = (receipt_id, product_id, quantity[0], unit_of_measurement[0])
+    values = (receipt_id, product_id, quantity, unit_of_measurement)
 
     execute_insert_query(sql, values)
 
