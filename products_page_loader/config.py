@@ -1,5 +1,3 @@
-from os.path import dirname, abspath
-
 # declare constants
 
 # database:
@@ -12,5 +10,4 @@ DB_PORT="5432"
 # message queue:
 MQ_HOSTNAME = "some-rabbit"
 
-# filepath
-MAINDIR = str(dirname(dirname(abspath(__file__))))
+

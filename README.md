@@ -1,11 +1,8 @@
-Rabbitmq:
-# docker run -d --hostname my-rabbit --name some-rabbit -p 5672:5672 rabbitmq
+Run bash script to build all needed docker containers:
+# ./scripts/script.sh
 
-Postgres:
-# docker build -t my-postgres --no-cache -f Dockerfile_postgres .
-# docker run --name some-postgres -p 5432:5432 -e POSTGRES_PASSWORD=qwerty -d my-postgres
-docker run --name some-postgres -p 5432:5432 -e POSTGRES_PASSWORD=qwerty my-postgres
+run Python container for file processing:
+# docker run -it --rm --name file_processing --link some-rabbit:rabbit-link --link some-postgres:postgres-link file_processing
 
-Python:
-# docker build -t receiver-app -f Dockerfile_fp .
-# docker run -it --rm --name receiver-app-container --link some-rabbit:rabbit-link --link some-postgres:postgres-link receiver-app
+run Python container for loading product page:
+# docker run -it --rm --name page_loader --link some-rabbit:rabbit-link --link some-postgres:postgres-link page_loader
