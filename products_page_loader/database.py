@@ -1,5 +1,5 @@
 import psycopg2
-import config
+import config_local as config
 
 
 def connect_to_db():
@@ -16,6 +16,7 @@ def execute_query(sql, values):
     cursor = conn.cursor()
         
     cursor.execute(sql, values)
+    print("The table 'products' is updated with following query:")
     print(cursor.query)
     conn.commit()
 

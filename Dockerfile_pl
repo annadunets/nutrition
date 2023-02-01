@@ -16,4 +16,7 @@ RUN apt-get update \
 
 COPY products_page_loader .
 
+RUN rm -rf config.py && rm -rf config_local.py
+COPY products_page_loader/config.py config_local.py
+
 CMD ["python", "./receive.py"]
