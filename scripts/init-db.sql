@@ -15,9 +15,9 @@ CREATE TABLE public.receipts (
 CREATE TABLE public.products (
     product_id SERIAL PRIMARY KEY,
     product_name character varying(45) NOT NULL,
-    fat NUMERIC(3, 2),
-    carbohydrate NUMERIC(3, 2),
-    protein NUMERIC(3, 2)
+    fat FLOAT,
+    carbohydrate FLOAT,
+    protein FLOAT
 );
 
 CREATE TABLE public.receipts_content (
