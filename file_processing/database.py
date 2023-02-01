@@ -38,7 +38,6 @@ def insert_into_receipts(receipt_name):
     values = (receipt_name, today)
     
     # pass the query and the values tuple to the execute function
-    print("about to insert into receipts")
     id = execute_insert_query(sql, values)
     return id
 

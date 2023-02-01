@@ -1,0 +1,22 @@
+FROM python:3.8.3-slim
+
+WORKDIR /usr/src/my_app/page_loader
+
+
+RUN apt-get update \
+    && apt -f install -y \
+    && apt-get install -y wget \
+    && wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
+    && apt-get install ./google-chrome-stable_current_amd64.deb -y \
+    && apt-get -y install chromium-driver \
+    && apt-get -y install libpq-dev gcc \
+    && pip install psycopg2 \
+    && pip install pika==1.3.1 \
+    && pip install selenium
+
+COPY products_page_loader .
+
+RUN rm -rf config.py && rm -rf config_local.py
+COPY products_page_loader/config.py config_local.py
+
+CMD ["python", "./receive.py"]

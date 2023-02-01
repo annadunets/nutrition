@@ -1,6 +1,6 @@
 __pycache__
 
 hints.md
-products_info_extraction/
-send.py
+send_pdf.py
+send_product.py
 ui/
