@@ -8,3 +8,7 @@ docker build -t file_processing --no-cache -f Dockerfile_fp .
 run Python container for loading product page:
 docker build -t page_loader --no-cache -f Dockerfile_pl .
 # docker run -it --rm --name page_loader --link some-rabbit:rabbit-link --link some-postgres:postgres-link page_loader
+
+run Django container for UI:
+docker build -t user_interface -f Dockerfile_ui .
+docker run -it --rm --name user_interface --link some-rabbit:rabbit-link --link some-postgres:postgres-link user_interface
