@@ -29,8 +29,8 @@ DEBUG = True
 ALLOWED_HOSTS = [
     '127.0.0.1',
     'localhost',
-    '172.17.0.4',
-    #'some-postgres',
+    '172.18.0.4',
+    'some-postgres',
     #'some-rabbit'
 ]
 
