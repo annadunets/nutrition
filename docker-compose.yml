@@ -1,0 +1,75 @@
+version: "3.7"
+services:
+
+  rabbitmq:
+    image: "rabbitmq"
+    container_name: some-rabbit
+    ports:
+      - "5672:5672"
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  postgresql:
+    build:
+      context: .
+      dockerfile: Dockerfile_postgres
+    container_name: some-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=qwerty
+    healthcheck:
+      test: psql -U postgres
+      interval: 5s
+      retries: 5
+      timeout: 10s
+
+  file_processing:
+    build:
+      context: .
+      dockerfile: Dockerfile_fp
+    container_name: file_processing
+    volumes:
+    - ./file_processing:/usr/src/my_app/file_processing
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      postgresql:
+        condition: service_healthy
+    links:
+      - rabbitmq
+      - postgresql
+
+  products_page_loader:
+    build:
+      context: .
+      dockerfile: Dockerfile_pl
+    container_name: page_loader
+    volumes:
+    - ./products_page_loader:/usr/src/my_app/products_page_loader
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      postgresql:
+        condition: service_healthy
+    links:
+      - rabbitmq
+      - postgresql
+
+  user_interface:
+    build:
+      context: .
+      dockerfile: Dockerfile_ui
+    container_name: user_interface
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./user_interface:/usr/src/my_app
+    depends_on:
+      postgresql:
+        condition: service_healthy
+    links:
+      - postgresql
