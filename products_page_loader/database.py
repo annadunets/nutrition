@@ -24,14 +24,24 @@ def execute_query(sql, values):
     conn.close()
 
 
-def alter_products_info(product_name, fat, carbohydrate, protein):
+def alter_products_info(product_name, energy, fat, carbohydrate, protein):
     
-    sql = """UPDATE products SET fat = %s WHERE product_name = %s;
+    sql = """UPDATE products SET energy = %s WHERE product_name = %s;
+             UPDATE products SET fat = %s WHERE product_name = %s;
              UPDATE products SET carbohydrate = %s WHERE product_name = %s;
              UPDATE products SET protein = %s WHERE product_name = %s;"""
     
-    values = (fat, product_name, carbohydrate, product_name, protein, product_name)
+    values = (energy, product_name, fat, product_name, carbohydrate, product_name, protein, product_name)
     
     # pass the query and the values tuple to the execute function
+    id = execute_query(sql, values)
+    return id
+
+def insert_into_receipt_processing_logs(receipt_id, message):
+    
+    sql = "INSERT INTO receipt_processing_logs (receipt_id, message) VALUES (%s, %s);"
+
+    values = (receipt_id, message)
+
     id = execute_query(sql, values)
     return id

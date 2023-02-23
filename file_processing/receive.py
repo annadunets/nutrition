@@ -11,20 +11,38 @@ def main():
     listener.listen(config.MQ_HOSTNAME, 'received_new_pdf', process_pdf)
 
 def process_pdf(data):
-    
-    # this shuld return the new receipt id
-    receipt_id = database.insert_into_receipts(data['name'])
-    filename = config.MAINDIR + '/receipts/' + data['name']
-    receipt_data = pdf_receipt_parser().extract_pdf(filename)
-    # start loop and check if the produnct from the receipt are already in products table
 
-    for product_line in receipt_data:
+    receipt_id = data['receipt_id']
+    filename = config.MAINDIR + '/receipts/' + data['file_name']
+    receipt_data = pdf_receipt_parser().extract_pdf(filename)
+    # insert a date from the receipt to the receipts table:
+    database.alter_receipts_table(receipt_id, receipt_data.date)
+    # update logs table:
+    message = f"The receipts table has been updated with a date {receipt_data.date} for receipt Nº{receipt_id}"
+    database.insert_into_receipt_processing_logs(receipt_id, message)
+
+    # check if products from a new receipt are already in products table, if not - insert them
+    fill_products_table(receipt_id, receipt_data.receipt_lines)
+    
+    # send a log to logs table in DB
+    message = f'All products from receipt Nº{receipt_id} have been added to DB'
+    database.insert_into_receipt_processing_logs(receipt_id, message) 
+
+
+def fill_products_table(receipt_id, products):
+    # start loop and check if the products from the receipt are already in products table
+    for product_line in products:
+        
         product_id = database.select_from_products(product_line.product_name)
         if product_id == None:
             # this product will be inserted into products table
             product_id = database.insert_into_products(product_line.product_name, None, None, None)
             # send message to rabbit MQ (to product page loader)
-            send_to_queue(product_line.product_name)
+            data = {'receipt_id': receipt_id, 'name': product_line.product_name}
+            send_to_queue(data)
+            # send a log to logs table in DB 
+            message = product_line.product_name + ' saved to DB'
+            database.insert_into_receipt_processing_logs(receipt_id, message)
         
         # now we have all the info about the products 
         # we can add their quantity into receipts_content table
@@ -33,12 +51,7 @@ def process_pdf(data):
             database.insert_into_table_receipts_content(
                 receipt_id, product_id, product_line.quantity, product_line.units_of_measurement)
 
-
-
-def send_to_queue(product_name):
-    print(f"{product_name} is send to the queue")
-
-    data = {'name': product_name}
+def send_to_queue(data):
 
     connection = pika.BlockingConnection(pika.ConnectionParameters(host=config.MQ_HOSTNAME))
     channel = connection.channel()

@@ -14,7 +14,7 @@ def load_page(product_name):
      # Open Sainsbury's website
     driver.get(config.WEBSITE)
     submit_search_form(driver, product_name)
-    sleep(5)
+    sleep(15)
     load_product_page(driver)
     sleep(5)
     nutrition_table_text = fetch_nutrition_table(driver)
@@ -52,13 +52,18 @@ def fetch_nutrition_table(driver):
     return nutrition_input.text
 
 def text_parser(text):
-    nutrition_arr = ['Fat', 'Carbohydrate', 'Protein']
+    nutrition_arr = ['Energy', 'Fat', 'Carbohydrate', 'Protein']
     result_arr = {}
     for el in nutrition_arr:
-        pattern = el + "[\s<]*([0-9.]+)"
+        if el == 'Energy':
+            pattern = "([0-9 ]*)kcal"
+        else:
+            pattern = el + "[\s<]*([0-9.]+)"
+            
         search = re.search(pattern, text)
         result_arr[el] = float(search.group(1))
 
+    print(result_arr)
     return result_arr
 
 

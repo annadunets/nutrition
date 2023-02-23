@@ -5,7 +5,7 @@ services:
     image: "rabbitmq"
     container_name: some-rabbit
     ports:
-      - "5672:5672"
+      - "127.25.0.1:5672:5672"
     healthcheck:
       test: rabbitmq-diagnostics -q ping
       interval: 5s
@@ -18,7 +18,7 @@ services:
       dockerfile: Dockerfile_postgres
     container_name: some-postgres
     ports:
-      - "5432:5432"
+      - "127.25.0.2:5432:5432"
     environment:
       - POSTGRES_PASSWORD=qwerty
     healthcheck:
@@ -32,8 +32,11 @@ services:
       context: .
       dockerfile: Dockerfile_fp
     container_name: file_processing
+    ports:
+      - "127.25.0.3:83:80"
     volumes:
     - ./file_processing:/usr/src/my_app/file_processing
+    - ./user_interface/ui_app/media:/usr/src/my_app/receipts
     depends_on:
       rabbitmq:
         condition: service_healthy
@@ -48,8 +51,11 @@ services:
       context: .
       dockerfile: Dockerfile_pl
     container_name: page_loader
+    ports:
+      - "127.25.0.4:84:80"
     volumes:
     - ./products_page_loader:/usr/src/my_app/products_page_loader
+    - ./user_interface/ui_app/media:/usr/src/my_app/receipts
     depends_on:
       rabbitmq:
         condition: service_healthy
@@ -65,11 +71,14 @@ services:
       dockerfile: Dockerfile_ui
     container_name: user_interface
     ports:
-      - "8000:8000"
+      - "127.25.0.5:8000:8000"
     volumes:
       - ./user_interface:/usr/src/my_app
     depends_on:
       postgresql:
         condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
     links:
       - postgresql
+      - rabbitmq
