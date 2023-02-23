@@ -9,18 +9,20 @@
 CREATE TABLE public.receipts (
     receipt_id SERIAL PRIMARY KEY,
     receipt_name VARCHAR(45) NOT NULL,
-    date DATE NOT NULL DEFAULT CURRENT_DATE
+    date VARCHAR (20)
 );
 
 CREATE TABLE public.products (
     product_id SERIAL PRIMARY KEY,
     product_name character varying(45) NOT NULL,
+    energy FLOAT,
     fat FLOAT,
     carbohydrate FLOAT,
     protein FLOAT
 );
 
 CREATE TABLE public.receipts_content (
+    id SERIAL PRIMARY KEY,
     receipt_id INT REFERENCES receipts (receipt_id),
     product_id INT REFERENCES products (product_id),
     quantity FLOAT,

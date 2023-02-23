@@ -1,0 +1,94 @@
+{% extends 'ui_app/base.html' %}
+
+{% block page_header %}
+    <h1>Nutrition project.</h1>
+    <h3>Nutrition project will help you track how healthy your diet is according to your grocery purchases.</h3>
+{% endblock page_header %}
+
+{% block content %}
+<p>
+
+    <p> Receipts that have been downloaded already: </p>
+<ul>
+    {% for receipt in receipts %}
+      <li>
+        <a href="{% url 'ui_app:receipt' receipt.receipt_id %}"> {{ receipt.date }} </a>
+      </li>
+    {% empty %}
+        <li>No receipts have been downloaded yet</li>
+    {% endfor %}
+</ul>
+
+{% if form != '' %}
+<div id="file_upload_form">
+  <p>You can download a file here: </p>
+  <form action="{% url 'ui_app:index' %}" method="post"  enctype="multipart/form-data" >
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Submit" id="form_submit">
+  </form>
+</div>
+{% endif %}
+
+
+<div class="spinner-border text-info" role="status" id="loader">
+    <span class="sr-only">Loading...</span>
+    <div>Receipt prosession is in progress...</div>
+</div>
+<style type="text/css">
+    #loader {
+      display: none;
+    }
+    </style>
+
+<script>
+
+  var currently_processing_file = "{{ receipt_id }}";
+  var spinner = $('#loader');
+  var my_form = $('#file_upload_form');
+  var status = ''
+
+  function checkStatus(){
+
+    if (currently_processing_file != ''){
+        console.log('receipt id: ', currently_processing_file);
+        spinner.show()
+
+
+        $.ajax({
+          url: 'api/files/' + currently_processing_file,
+          method: 'POST',
+          dataType: 'JSON',
+          success: function(responce){
+            status = responce.status;
+            saved = responce.saved;
+            retreived = responce.retreived;
+            console.log('status: ', status);
+            if (status == 'in progress'){
+              setTimeout(checkStatus, 1000);
+              my_form.hide()         
+            }else{
+              /* reload page without sending POST data again */
+              window.location.href = window.location.href;
+            }
+          }
+        })
+     }
+
+  }
+
+
+
+  $(document).ready(function(){
+    setTimeout(checkStatus, 1000);
+  })
+
+
+
+  
+
+</script>
+
+</p>
+{% endblock content %}
+
