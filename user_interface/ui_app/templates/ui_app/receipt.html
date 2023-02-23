@@ -1,0 +1,56 @@
+{% extends 'ui_app/base.html' %}
+
+{% block page_header %}
+    <h1>Nutrition project.</h1>
+    <h3>Nutrition project will help you track how healthy your diet is according to your grocery purchases.</h3>
+{% endblock page_header %}
+
+{% block content %}
+<p>
+    <div>
+        <p>Note: The acceptable macronutrient distribution ranges are:
+        45–65% of your daily calories from carbs, 
+        20–35% from fats and 
+        10–35% from protein.</p>
+        <p>Your ratio this week is <span>{{pcf.ratio}}</span></p>
+        <p>Following calculations are based on the suggestion 
+            that there are 3 people in the family and products are purchased once a week:</p>
+    </div>
+
+<table class="table table-sm">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Product</th>
+        <th scope="col">Quantity</th>
+        <th scope="col">Enegry</th>
+        <th scope="col">Fat</th>
+        <th scope="col">Carbs</th>
+        <th scope="col">Proteins</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for product in products %}
+      <tr>
+        <th scope="row">{{ forloop.counter }}</th>
+        <td>{{ product.product.product_name }}</td>
+        <td>{{ product.unit_of_measurement }}</td>
+        <td>{{ product.product.energy }}</td>
+        <td>{{ product.product.fat }}</td>
+        <td>{{ product.product.carbohydrate }}</td>
+        <td>{{ product.product.protein }}</td>
+      </tr>
+    {% endfor %}
+      <tr>
+        <th colspan="2" scope="row">In a day: </th>
+        <td></td>
+        <td>{{ pcf.energy }}</td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+{% endblock content %}
+

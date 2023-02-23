@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -29,7 +30,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
     '127.0.0.1',
     'localhost',
-    '172.18.0.4',
+    '127.25.0.5',
     'some-postgres',
     #'some-rabbit'
 ]
@@ -41,13 +42,17 @@ INSTALLED_APPS = [
     #My apps:
     'ui_app',
 
+    # Third party apps
+    'bootstrap4',
+    'django.contrib.staticfiles',
+
     #Default django apps:
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
+    
 ]
 
 MIDDLEWARE = [
@@ -97,12 +102,19 @@ DATABASES = {
         'NAME': 'nutrition', 
         'USER': 'postgres', 
         'PASSWORD': 'qwerty',
+        #'HOST': '127.25.0.2',
         'HOST': 'some-postgres', 
         'PORT': '5432',
     }
 }
 
+# path for uploaded files
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
 
+# message queue:
+MQ_HOSTNAME = "some-rabbit"
+#MQ_HOSTNAME = "localhost"
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
