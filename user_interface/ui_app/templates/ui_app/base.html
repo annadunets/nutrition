@@ -1,0 +1,35 @@
+{% load bootstrap4 %}
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+		<link rel="icon" href="data:;base64,iVBORw0KGgo=">
+		<title>Nutrition</title>
+
+		{% bootstrap_css %}
+		{% bootstrap_javascript jquery='full' %}
+		{% load static %}
+
+		
+		<script type="text/javascript" src="{{ STATIC_URL }} /static/jquery-3.6.3.js">
+		</script> 
+
+	</head>
+
+	<body>
+		<nav class="navbar navbar-expand-md navbar-light bg-light mb-4 border">
+			
+		</nav>
+
+		<main role="main" class="container">
+			<div class="pb-2 mb-2 border-bottom">
+				{% block page_header %}{% endblock page_header %}
+			</div>
+			<div>
+				{% block content %}{% endblock content %}
+			</div>
+		</main>
+	</body>
+</html>
