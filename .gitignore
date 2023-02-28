@@ -3,4 +3,4 @@ __pycache__
 hints.md
 send_pdf.py
 send_product.py
-ui/
+user_interface/ui
