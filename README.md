@@ -1,14 +1,8 @@
-Run bash script to build all needed docker containers:
-# ./scripts/script.sh
+Project Nutrition is written to track the nutrition value of the products the famaly consumes withing a week. It provides a user interface where a user can upload a PDF receipt from a grocery store and see the avarage daily nutrition value of the purchased products.
 
-run Python container for file processing:
-docker build -t file_processing --no-cache -f Dockerfile_fp .
-# docker run -it --rm -d --name file_processing --link some-rabbit:rabbit-link --link some-postgres:postgres-link file_processing
+Following technologies were used in this project: Python 3.7, Django 3.2.16, (libraries - psycopg2, pika), PostgreSQL, RabbitMQ, jQuery, Bootstrap, Docker, Git.
 
-run Python container for loading product page:
-docker build -t page_loader --no-cache -f Dockerfile_pl .
-# docker run -it --rm --name page_loader --link some-rabbit:rabbit-link --link some-postgres:postgres-link page_loader
-
-run Django container for UI:
-docker build -t user_interface -f Dockerfile_ui .
-docker run -it --rm --name user_interface --link some-rabbit:rabbit-link --link some-postgres:postgres-link user_interface
+To run the project you need a docker-compose installed on your machine.
+Open the terminal and go to the project's root folder. Then run a command:
+$ docker-compose up
+Now the project should be available from your browser by a link: http://127.25.0.5:8000/
