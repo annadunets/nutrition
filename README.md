@@ -12,3 +12,4 @@ Open the terminal and go to the project's root folder. Then run a command:
 $ docker-compose up
 ```
 Now the project should be available from your browser by a link: http://127.25.0.5:8000/
+
