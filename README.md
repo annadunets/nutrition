@@ -13,3 +13,5 @@ $ docker-compose up
 ```
 Now the project should be available from your browser by a link: http://127.25.0.5:8000/
 
+For test purposes you can take the example of receipt from `/receipts/`
+
