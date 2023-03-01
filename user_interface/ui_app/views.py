@@ -113,12 +113,13 @@ def send_message_to_queue(receipt_id, file):
 
 @csrf_exempt
 def api(request, receipt_id):
-    #cheese_blog = Blog.objects.get(name="Cheddar Talk")
     messages = ReceiptProcessingLogs.objects.all().filter(receipt_id=receipt_id)
     saved = 0
     retreived = 0
     all_products = 0
+    logs = []
     for message in messages:
+        logs.append(message.message)
         if(re.search('saved', message.message)):
             saved += 1
         elif(re.search('nutrition', message.message)):
@@ -131,12 +132,12 @@ def api(request, receipt_id):
     else:
         status = 'in progress' 
 
-    print(f'status: {status}, saved: {saved}, retreived: {retreived}')
     responce = {
         'receipt_id': receipt_id,
         'status': status,
         'saved': saved,
-        'retreived': retreived
+        'retreived': retreived,
+        'logs': logs
     }
     return JsonResponse(responce, safe=False)
 
