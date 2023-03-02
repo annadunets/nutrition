@@ -9,13 +9,13 @@
 <p>
 
     <p> Receipts that have been downloaded already: </p>
-<ul>
+<ul class="list-group list-group-flush">
     {% for receipt in receipts %}
-      <li>
+      <li class="list-group-item">
         <a href="{% url 'ui_app:receipt' receipt.receipt_id %}"> {{ receipt.date }} </a>
       </li>
     {% empty %}
-        <li>No receipts have been downloaded yet</li>
+        <p>No receipts have been downloaded yet</p>
     {% endfor %}
 </ul>
 
@@ -34,18 +34,28 @@
 <div class="spinner-border text-info" role="status" id="loader">
     <span class="sr-only">Loading...</span>
 </div>
+
+<div id="logs">
+    <p>Receipt processing is in progress:</p>
+    <ul class="list-group list-group-flush"></ul>
+</div>
+
 <style type="text/css">
-    #loader {
+    #loader{
       display: none;
     }
-    </style>
+    #logs{
+      display: none;
+    }
+</style>
 
 <script>
 
   var currently_processing_file = "{{ receipt_id }}";
   var spinner = $('#loader');
   var my_form = $('#file_upload_form');
-  var status = ''
+  var logs = $('#logs');
+  var status = '';
 
   function checkStatus(){
 
@@ -62,10 +72,14 @@
             status = responce.status;
             saved = responce.saved;
             retreived = responce.retreived;
-            console.log('status: ', status);
             if (status == 'in progress'){
-              setTimeout(checkStatus, 1000);
-              my_form.hide()         
+              setTimeout(checkStatus, 2000);
+              my_form.hide();
+              logs.show();
+              $('#logs ul').empty();
+              for (i = 0; i < responce.logs.length; i++){
+                $('#logs ul').append( "<li class='list-group-item'>"+responce.logs[i]+"</li>" );
+              }
             }else{
               /* reload page without sending POST data again */
               window.location.href = window.location.href;
